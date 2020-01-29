@@ -1,11 +1,6 @@
 package com.finalkg.wsbim.client.gui.screen;
 
 import com.finalkg.wsbim.WSBIM;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
-
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -24,15 +19,15 @@ public class GuiButtonEdit extends GuiButton {
 	/**
      * Draws this button to the screen.
      */
-    public void func_191745_a(Minecraft mc, int mouseX, int mouseY, float partialTicks){
-    	super.func_191745_a(mc, mouseX, mouseY, partialTicks);
-        if (this.field_146125_m){
-            mc.func_110434_K().func_110577_a(EDIT_BUTTON_TEXTURE);
-            GlStateManager.func_179097_i();
+    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks){
+    	super.drawButton(mc, mouseX, mouseY, partialTicks);
+        if (this.visible){
+            mc.getTextureManager().bindTexture(EDIT_BUTTON_TEXTURE);
+            GlStateManager.disableDepth();
             int i = 0;
             int j = 0;
-            this.func_73729_b(this.field_146128_h + 1, this.field_146129_i + 1, i, j, this.field_146120_f - 2, this.field_146121_g - 2);
-            GlStateManager.func_179126_j();
+            this.drawTexturedModalRect(this.x + 1, this.y + 1, i, j, this.width - 2, this.height - 2);
+            GlStateManager.enableDepth();
         }
     }
 }

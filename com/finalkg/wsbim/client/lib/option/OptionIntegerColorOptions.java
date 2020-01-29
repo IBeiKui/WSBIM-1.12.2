@@ -1,8 +1,6 @@
 package com.finalkg.wsbim.client.lib.option;
 
 import java.lang.reflect.Field;
-import com.finalkg.wsbim.client.gui.screen.options.GuiModifyColor;
-
 
 import com.finalkg.wsbim.client.gui.screen.options.GuiModifyColor;
 

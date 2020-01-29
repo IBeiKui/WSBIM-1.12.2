@@ -3,18 +3,6 @@ package com.finalkg.wsbim.client.lib;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -50,43 +38,43 @@ public class GuiHelper {
             top = bottom;
             bottom = j;
         }
-        Tessellator tessellator = Tessellator.func_178181_a();
-        BufferBuilder bufferbuilder = tessellator.func_178180_c();
-        GlStateManager.func_179147_l();
-        GlStateManager.func_179090_x();
-        GlStateManager.func_187428_a(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        GlStateManager.func_179131_c(red, green, blue, alpha);
-        bufferbuilder.func_181668_a(7, DefaultVertexFormats.field_181705_e);
-        bufferbuilder.func_181662_b((double)left, (double)bottom, 0.0D).func_181675_d();
-        bufferbuilder.func_181662_b((double)right, (double)bottom, 0.0D).func_181675_d();
-        bufferbuilder.func_181662_b((double)right, (double)top, 0.0D).func_181675_d();
-        bufferbuilder.func_181662_b((double)left, (double)top, 0.0D).func_181675_d();
-        tessellator.func_78381_a();
-        GlStateManager.func_179098_w();
-        GlStateManager.func_179084_k();
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.color(red, green, blue, alpha);
+        bufferbuilder.begin(7, DefaultVertexFormats.POSITION);
+        bufferbuilder.pos((double)left, (double)bottom, 0.0D).endVertex();
+        bufferbuilder.pos((double)right, (double)bottom, 0.0D).endVertex();
+        bufferbuilder.pos((double)right, (double)top, 0.0D).endVertex();
+        bufferbuilder.pos((double)left, (double)top, 0.0D).endVertex();
+        tessellator.draw();
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
     }
     
     public static void closePlayerInventoriesOnClientSide() {
-    	EntityPlayerSP player = Minecraft.func_71410_x().field_71439_g;
-		Object[] slots = player.field_71070_bA.field_75151_b.toArray();
+    	EntityPlayerSP player = Minecraft.getMinecraft().player;
+		Object[] slots = player.openContainer.inventorySlots.toArray();
 		List<IInventory> inventories = new ArrayList<IInventory>();
 		for(int i = 0; i < slots.length; i++){
 			Slot slot = (Slot) slots[i];
 			if(slot !=null){
-				if(!inventories.contains(slot.field_75224_c)){
-					inventories.add(slot.field_75224_c);
+				if(!inventories.contains(slot.inventory)){
+					inventories.add(slot.inventory);
 				}
 			}
 		}
 		for(int k = 0; k < inventories.size(); k++){
 			IInventory inv = inventories.get(k);
 			if(inv !=null){
-				inv.func_174886_c(player);
+				inv.closeInventory(player);
 			}
 		}
-		player.field_71070_bA.func_75142_b();
-		player.field_71070_bA.func_75134_a(player);
-		player.func_71053_j();
+		player.openContainer.detectAndSendChanges();
+		player.openContainer.onContainerClosed(player);
+		player.closeScreen();
     }
 
     /**
@@ -100,18 +88,18 @@ public class GuiHelper {
      */
 	public static void renderItemStackBasic(ItemStack itemStack, int x, int y, float partialTicks) {
         if (itemStack != null){
-            float f1 = (float)itemStack.func_190921_D() - partialTicks;
+            float f1 = (float)itemStack.getAnimationsToGo() - partialTicks;
             if (f1 > 0.0F){
-                GlStateManager.func_179094_E();
+                GlStateManager.pushMatrix();
                 float f2 = 1.0F + f1 / 5.0F;
-                GlStateManager.func_179109_b((float)(x + 8), (float)(y + 12), 0.0F);
-                GlStateManager.func_179152_a(1.0F / f2, (f2 + 1.0F) / 2.0F, 1.0F);
-                GlStateManager.func_179109_b((float)(-(x + 8)), (float)(-(y + 12)), 0.0F);
+                GlStateManager.translate((float)(x + 8), (float)(y + 12), 0.0F);
+                GlStateManager.scale(1.0F / f2, (f2 + 1.0F) / 2.0F, 1.0F);
+                GlStateManager.translate((float)(-(x + 8)), (float)(-(y + 12)), 0.0F);
             }
 
-            Minecraft.func_71410_x().field_71462_r.field_146296_j.func_175042_a(itemStack, x, y);
+            Minecraft.getMinecraft().currentScreen.itemRender.renderItemIntoGUI(itemStack, x, y);
             if (f1 > 0.0F){
-                GlStateManager.func_179121_F();
+                GlStateManager.popMatrix();
             }
         }
 	}
@@ -121,21 +109,21 @@ public class GuiHelper {
      * Works anytime with mc reference.
      */
     public static void renderItemStack(Minecraft mc, EntityPlayerSP player, ItemStack stack, int x, int y, float renderTick){
-    	net.minecraft.client.renderer.RenderItem renderItem = mc.func_175599_af();
-        if (stack != null && !stack.func_190926_b()){
-            float f1 = (float)stack.func_190921_D() - renderTick;
+    	net.minecraft.client.renderer.RenderItem renderItem = mc.getRenderItem();
+        if (stack != null && !stack.isEmpty()){
+            float f1 = (float)stack.getAnimationsToGo() - renderTick;
             if (f1 > 0.0F){
-                GlStateManager.func_179094_E();
+                GlStateManager.pushMatrix();
                 float f2 = 1.0F + f1 / 5.0F;
-                GlStateManager.func_179109_b((float)(x + 8), (float)(y + 12), 0.0F);
-                GlStateManager.func_179152_a(1.0F / f2, (f2 + 1.0F) / 2.0F, 1.0F);
-                GlStateManager.func_179109_b((float)(-(x + 8)), (float)(-(y + 12)), 0.0F);
+                GlStateManager.translate((float)(x + 8), (float)(y + 12), 0.0F);
+                GlStateManager.scale(1.0F / f2, (f2 + 1.0F) / 2.0F, 1.0F);
+                GlStateManager.translate((float)(-(x + 8)), (float)(-(y + 12)), 0.0F);
             }
-            renderItem.func_184391_a(player, stack, x, y);
+            renderItem.renderItemAndEffectIntoGUI(player, stack, x, y);
             if (f1 > 0.0F){
-                GlStateManager.func_179121_F();
+                GlStateManager.popMatrix();
             }
-            renderItem.func_175030_a(mc.field_71466_p, stack, x, y);
+            renderItem.renderItemOverlays(mc.fontRenderer, stack, x, y);
         }
     }
     

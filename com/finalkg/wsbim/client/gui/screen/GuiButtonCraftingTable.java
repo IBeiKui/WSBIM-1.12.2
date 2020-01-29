@@ -4,15 +4,6 @@ import com.finalkg.wsbim.WSBIM;
 import com.finalkg.wsbim.client.gui.GuiNormalCrafting;
 import com.finalkg.wsbim.client.gui.GuiSmallCrafting;
 import com.finalkg.wsbim.client.lib.GuiHelper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
@@ -41,31 +32,31 @@ public class GuiButtonCraftingTable extends GuiButton{
 	/**
      * Draws this button to the screen.
      */
-    public void func_191745_a(Minecraft mc, int mouseX, int mouseY, float partialTicks){
-    	if (this.field_146125_m){
-        	this.open = mc.field_71462_r != null && (mc.field_71462_r instanceof GuiSmallCrafting || mc.field_71462_r instanceof GuiNormalCrafting);
-        	GlStateManager.func_179094_E();
-        	mc.func_110434_K().func_110577_a(WSBIM.options.useResourcePackTabTexture ? TAB_TEXTURE_RESOURCEPACK : TAB_TEXTURE_DEFAULT);
-        	GlStateManager.func_179131_c(1, 1, 1, 1);
-        	this.func_73729_b(field_146128_h, field_146129_i - (this.open? 2 : 0), 140, this.open ? 32 : 2, 28, this.open ? 32 : 26);
-        	this.func_73729_b(field_146128_h + 25, field_146129_i + 26, 165, 28, 3, 1);
-        	this.func_73729_b(field_146128_h + 26, field_146129_i + 27, 166, 28, 2, 1);
-        	this.func_73729_b(field_146128_h + 27, field_146129_i + 28, 167, 28, 1, 1);
-        	GlStateManager.func_179121_F();
-        	GlStateManager.func_179094_E();
-    		GlStateManager.func_179091_B();
-    		GlStateManager.func_179147_l();
-    		RenderHelper.func_74520_c();
-    		GuiHelper.renderItemStackBasic(new ItemStack(Blocks.field_150462_ai), field_146128_h + 6, field_146129_i + (6), partialTicks);
-    		RenderHelper.func_74518_a();
-    		GlStateManager.func_179101_C();
-    		GlStateManager.func_179121_F();
+    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks){
+    	if (this.visible){
+        	this.open = mc.currentScreen != null && (mc.currentScreen instanceof GuiSmallCrafting || mc.currentScreen instanceof GuiNormalCrafting);
+        	GlStateManager.pushMatrix();
+        	mc.getTextureManager().bindTexture(WSBIM.options.useResourcePackTabTexture ? TAB_TEXTURE_RESOURCEPACK : TAB_TEXTURE_DEFAULT);
+        	GlStateManager.color(1, 1, 1, 1);
+        	this.drawTexturedModalRect(x, y - (this.open? 2 : 0), 140, this.open ? 32 : 2, 28, this.open ? 32 : 26);
+        	this.drawTexturedModalRect(x + 25, y + 26, 165, 28, 3, 1);
+        	this.drawTexturedModalRect(x + 26, y + 27, 166, 28, 2, 1);
+        	this.drawTexturedModalRect(x + 27, y + 28, 167, 28, 1, 1);
+        	GlStateManager.popMatrix();
+        	GlStateManager.pushMatrix();
+    		GlStateManager.enableRescaleNormal();
+    		GlStateManager.enableBlend();
+    		RenderHelper.enableGUIStandardItemLighting();
+    		GuiHelper.renderItemStackBasic(new ItemStack(Blocks.CRAFTING_TABLE), x + 6, y + (6), partialTicks);
+    		RenderHelper.disableStandardItemLighting();
+    		GlStateManager.disableRescaleNormal();
+    		GlStateManager.popMatrix();
         }
     }
     
-    public boolean func_146116_c(Minecraft mc, int mouseX, int mouseY)
+    public boolean mousePressed(Minecraft mc, int mouseX, int mouseY)
     {
-    	if(super.func_146116_c(mc, mouseX, mouseY)) {
+    	if(super.mousePressed(mc, mouseX, mouseY)) {
     		this.selected = true;
     		return true;
     	}
@@ -74,5 +65,5 @@ public class GuiButtonCraftingTable extends GuiButton{
     		return false;
     	}
     }
-    public void func_146113_a(SoundHandler soundHandlerIn){}
+    public void playPressSound(SoundHandler soundHandlerIn){}
 }

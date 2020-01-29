@@ -3,14 +3,6 @@ package com.finalkg.wsbim.client.gui;
 import com.finalkg.wsbim.WSBIM;
 import com.finalkg.wsbim.common.inventory.ContainerSmallCrafting;
 import com.finalkg.wsbim.common.lib.ColorHelper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -35,55 +27,55 @@ public class GuiSmallCrafting extends GuiContainer{
      * Draws the screen and all the components in it.
      */
 	@Override
-    public void func_73863_a(int mouseX, int mouseY, float partialTicks){
-        this.func_146276_q_();
-        super.func_73863_a(mouseX, mouseY, partialTicks);
-        this.func_191948_b(mouseX, mouseY);
+    public void drawScreen(int mouseX, int mouseY, float partialTicks){
+        this.drawDefaultBackground();
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
     }
 	
-	protected void func_146976_a(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
+	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
 		int grid_width = 88;
 		int grid_height = 48;
-		GlStateManager.func_179094_E();
-		GlStateManager.func_179131_c(1, 1, 1, 1);
+		GlStateManager.pushMatrix();
+		GlStateManager.color(1, 1, 1, 1);
 		if(WSBIM.options.renderBasedOffVanillaTextures()){
-			Minecraft.func_71410_x().func_110434_K().func_110577_a(VANILLA_BACKGROUND);
-			this.func_73729_b(field_147003_i, field_147009_r, 0, 0, field_146999_f, field_147000_g);
-			this.func_73729_b(field_147003_i+16, field_147009_r+10, 16, 10, 16, 65);
-			this.func_73729_b(field_147003_i+32, field_147009_r+10, 16, 10, 16, 65);
-			this.func_73729_b(field_147003_i+48, field_147009_r+10, 16, 10, 16, 65);
-			this.func_73729_b(field_147003_i+64, field_147009_r+10, 16, 10, 16, 65);
-			this.func_73729_b(field_147003_i+80, field_147009_r+10, 16, 10, 16, 65);
-			this.func_73729_b(field_147003_i+96, field_147009_r+10, 16, 10, 16, 65);
-			this.func_73729_b(field_147003_i+112, field_147009_r+10, 16, 10, 16, 65);
-			this.func_73729_b(field_147003_i+128, field_147009_r+10, 16, 10, 16, 65);
-			this.func_73729_b(field_147003_i+144, field_147009_r+10, 16, 10, 16, 65);
-			this.func_73729_b(field_147003_i+160, field_147009_r+10, 16, 10, 8, 65);
+			Minecraft.getMinecraft().getTextureManager().bindTexture(VANILLA_BACKGROUND);
+			this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+			this.drawTexturedModalRect(guiLeft+16, guiTop+10, 16, 10, 16, 65);
+			this.drawTexturedModalRect(guiLeft+32, guiTop+10, 16, 10, 16, 65);
+			this.drawTexturedModalRect(guiLeft+48, guiTop+10, 16, 10, 16, 65);
+			this.drawTexturedModalRect(guiLeft+64, guiTop+10, 16, 10, 16, 65);
+			this.drawTexturedModalRect(guiLeft+80, guiTop+10, 16, 10, 16, 65);
+			this.drawTexturedModalRect(guiLeft+96, guiTop+10, 16, 10, 16, 65);
+			this.drawTexturedModalRect(guiLeft+112, guiTop+10, 16, 10, 16, 65);
+			this.drawTexturedModalRect(guiLeft+128, guiTop+10, 16, 10, 16, 65);
+			this.drawTexturedModalRect(guiLeft+144, guiTop+10, 16, 10, 16, 65);
+			this.drawTexturedModalRect(guiLeft+160, guiTop+10, 16, 10, 8, 65);
 		}
 		else{
-			field_146297_k.func_110434_K().func_110577_a(TAB_TEXTURE);
-			this.func_73729_b(field_147003_i, field_147009_r, 0, 0, field_146999_f, field_147000_g);
+			mc.getTextureManager().bindTexture(TAB_TEXTURE);
+			this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		}
 		boolean flag = WSBIM.options.renderBasedOffVanillaTextures();
 		if(flag) {
 			grid_width = 74;
 			grid_height = 36;
-			field_146297_k.func_110434_K().func_110577_a(VANILLA_INVENTORY); 
-			this.func_73729_b(field_147003_i + (field_146999_f / 2 - (grid_width / 2)), field_147009_r + 25, 97, 17, grid_width, grid_height);
+			mc.getTextureManager().bindTexture(VANILLA_INVENTORY); 
+			this.drawTexturedModalRect(guiLeft + (xSize / 2 - (grid_width / 2)), guiTop + 25, 97, 17, grid_width, grid_height);
 		}
 		else {
-			field_146297_k.func_110434_K().func_110577_a(DEFAULT_INVENTORY_PLACEHOLDER); 
-			this.func_73729_b(field_147003_i + (field_146999_f / 2 - (grid_width / 2)), field_147009_r + 18, 80, 18, grid_width, grid_height);
+			mc.getTextureManager().bindTexture(DEFAULT_INVENTORY_PLACEHOLDER); 
+			this.drawTexturedModalRect(guiLeft + (xSize / 2 - (grid_width / 2)), guiTop + 18, 80, 18, grid_width, grid_height);
 		}
-		GlStateManager.func_179121_F();
+		GlStateManager.popMatrix();
 	}
 	
-	protected void func_146979_b(int mouseX, int mouseY){
-		super.func_146979_b(mouseX, mouseY);;
-		  String s = I18n.func_135052_a("container.crafting", new Object[0]);
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
+		super.drawGuiContainerForegroundLayer(mouseX, mouseY);;
+		  String s = I18n.format("container.crafting", new Object[0]);
 		  int drawColor = ColorHelper.GUI_CONTAINER_TEXT_COLOR;
-	      this.field_146289_q.func_78276_b(s, this.field_146999_f / 2 - this.field_146289_q.func_78256_a(s) / 2, 6, drawColor);
-	      this.field_146289_q.func_78276_b(I18n.func_135052_a("container.inventory", new Object[0]), 8, this.field_147000_g - 96 + 2, drawColor);
+	      this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, drawColor);
+	      this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, drawColor);
 	}
 
 }

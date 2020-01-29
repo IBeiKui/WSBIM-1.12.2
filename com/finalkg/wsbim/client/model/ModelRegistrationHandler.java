@@ -1,16 +1,6 @@
 package com.finalkg.wsbim.client.model;
 
 import com.finalkg.wsbim.WSBIM;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.Item;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -56,15 +46,15 @@ public class ModelRegistrationHandler {
 		registerToolSetRender(WSBIM.itemEmeraldPickaxe, WSBIM.itemEmeraldAxe, WSBIM.itemEmeraldShovel, WSBIM.itemEmeraldHoe, WSBIM.itemEmeraldSword);
 		registerToolSetRender(WSBIM.itemMixedMetalPickaxe, WSBIM.itemMixedMetalAxe, WSBIM.itemMixedMetalShovel, WSBIM.itemMixedMetalHoe, WSBIM.itemMixedMetalSword);
 		//ALL BLOCK RENDERS HERE
-		registerRender(Item.func_150898_a(WSBIM.blockMixedMetalOre));
-		registerRender(Item.func_150898_a(WSBIM.blockMixedMetal));
-		registerRender(Item.func_150898_a(WSBIM.blockWetSand));
-		registerRender(Item.func_150898_a(WSBIM.blockMud));
-		registerRender(Item.func_150898_a(WSBIM.blockLeatherBlock));
-		registerRender(Item.func_150898_a(WSBIM.blockIceMaker));
-		registerRender(Item.func_150898_a(WSBIM.blockIceMakerActive));
-		registerRender(Item.func_150898_a(WSBIM.blockObsidianChest));
-		registerRender(Item.func_150898_a(WSBIM.blockMixedMetalChest));
+		registerRender(Item.getItemFromBlock(WSBIM.blockMixedMetalOre));
+		registerRender(Item.getItemFromBlock(WSBIM.blockMixedMetal));
+		registerRender(Item.getItemFromBlock(WSBIM.blockWetSand));
+		registerRender(Item.getItemFromBlock(WSBIM.blockMud));
+		registerRender(Item.getItemFromBlock(WSBIM.blockLeatherBlock));
+		registerRender(Item.getItemFromBlock(WSBIM.blockIceMaker));
+		registerRender(Item.getItemFromBlock(WSBIM.blockIceMakerActive));
+		registerRender(Item.getItemFromBlock(WSBIM.blockObsidianChest));
+		registerRender(Item.getItemFromBlock(WSBIM.blockMixedMetalChest));
 		registerColoredBlockRender(WSBIM.blockLeatherBlockColored);
 	}
 	
@@ -85,7 +75,7 @@ public class ModelRegistrationHandler {
 	
 	public static <E extends Enum<?>> void registerMetadataBlockModel(Block block, String variantName, Class<E> variants) {
 		for(int i = 0; i < variants.getEnumConstants().length; i++) {
-			ModelLoader.setCustomModelResourceLocation(Item.func_150898_a(block), i, new ModelResourceLocation(block.getRegistryName(),  variantName + "=" + variants.getEnumConstants()[i].name().toLowerCase()));
+			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), i, new ModelResourceLocation(block.getRegistryName(),  variantName + "=" + variants.getEnumConstants()[i].name().toLowerCase()));
 		}
 	}
 	

@@ -1,8 +1,6 @@
 package com.finalkg.wsbim.client.lib.option;
 
 import com.finalkg.wsbim.WSBIMOptions.OptionType;
-import net.minecraft.client.gui.GuiScreen;
-
 
 import net.minecraft.client.gui.GuiScreen;
 

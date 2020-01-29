@@ -1,11 +1,6 @@
 package com.finalkg.wsbim.client.lib.option;
 
 import com.finalkg.wsbim.WSBIMOptions.OptionType;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -23,7 +18,7 @@ public abstract class Option{
 	public Option(boolean gui, String variableName, String unlocalizedName, OptionType type){
 		this.avalableOption = gui;
 		this.variableName = variableName;
-		this.guiName = I18n.func_135052_a(unlocalizedName, new Object[0]);
+		this.guiName = I18n.format(unlocalizedName, new Object[0]);
 		this.type = type;
 	}
 	

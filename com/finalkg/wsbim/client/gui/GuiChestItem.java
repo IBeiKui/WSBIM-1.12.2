@@ -1,25 +1,6 @@
 package com.finalkg.wsbim.client.gui;
 
 import java.io.IOException;
-import com.finalkg.wsbim.WSBIM;
-import com.finalkg.wsbim.client.gui.screen.GuiButtonEdit;
-import com.finalkg.wsbim.client.gui.screen.GuiButtonRecolor;
-import com.finalkg.wsbim.client.gui.screen.GuiRecolorItem;
-import com.finalkg.wsbim.client.gui.screen.GuiRenameItem;
-import com.finalkg.wsbim.common.inventory.ContainerChestItem;
-import com.finalkg.wsbim.common.lib.ColorHelper;
-import com.finalkg.wsbim.common.lib.ContainerUtil;
-import com.finalkg.wsbim.common.lib.EnumChestItem;
-import com.finalkg.wsbim.common.lib.IChestItem;
-import com.finalkg.wsbim.common.lib.IColoredItem;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-
 
 import com.finalkg.wsbim.WSBIM;
 import com.finalkg.wsbim.client.gui.screen.GuiButtonEdit;
@@ -59,97 +40,97 @@ public class GuiChestItem extends GuiContainer{
 	public GuiChestItem(EntityPlayer player, ItemStack chestItem) {
 		super(new ContainerChestItem(player, chestItem));
 		this.chestItemStack = chestItem;
-		this.itemChestItem = (IChestItem) this.chestItemStack.func_77973_b();
+		this.itemChestItem = (IChestItem) this.chestItemStack.getItem();
 		this.chestItemType = this.itemChestItem.getType();
 		this.player = player;
-		this.field_146999_f = this.chestItemType.getGuiWidth();
-		this.field_147000_g = this.chestItemType.getGuiHeight();
-		this.CHEST_ITEMSTACK_INDEX = ContainerUtil.getItemStackIndexInPlayerInventory(player.field_71071_by, chestItem);
+		this.xSize = this.chestItemType.getGuiWidth();
+		this.ySize = this.chestItemType.getGuiHeight();
+		this.CHEST_ITEMSTACK_INDEX = ContainerUtil.getItemStackIndexInPlayerInventory(player.inventory, chestItem);
 	}
 	
-	public void func_73866_w_(){
-		super.func_73866_w_();
+	public void initGui(){
+		super.initGui();
 		if(CHEST_ITEMSTACK_INDEX != -1) {
-			this.editButton = new GuiButtonEdit(EDIT_BUTTON_ID, field_147003_i + this.field_146999_f, field_147009_r);
-			this.field_146292_n.add(this.editButton);
-			if(this.chestItemStack.func_77973_b() instanceof IColoredItem){
-				this.recolorButton = new GuiButtonRecolor(RECOLOR_BUTTON_ID, field_147003_i + this.field_146999_f, field_147009_r + 18);
-				this.field_146292_n.add(recolorButton);
+			this.editButton = new GuiButtonEdit(EDIT_BUTTON_ID, guiLeft + this.xSize, guiTop);
+			this.buttonList.add(this.editButton);
+			if(this.chestItemStack.getItem() instanceof IColoredItem){
+				this.recolorButton = new GuiButtonRecolor(RECOLOR_BUTTON_ID, guiLeft + this.xSize, guiTop + 18);
+				this.buttonList.add(recolorButton);
 			}	
 		}
 	}
-	public void func_146284_a(GuiButton b) throws IOException{
-		super.func_146284_a(b);
-		if(b.field_146127_k == EDIT_BUTTON_ID){
-			Minecraft.func_71410_x().func_147108_a(new GuiRenameItem(this.chestItemStack, this.chestItemType.getNameType(), CHEST_ITEMSTACK_INDEX));
+	public void actionPerformed(GuiButton b) throws IOException{
+		super.actionPerformed(b);
+		if(b.id == EDIT_BUTTON_ID){
+			Minecraft.getMinecraft().displayGuiScreen(new GuiRenameItem(this.chestItemStack, this.chestItemType.getNameType(), CHEST_ITEMSTACK_INDEX));
 		}
-		if(b.field_146127_k == RECOLOR_BUTTON_ID) {
-			IColoredItem item = (IColoredItem) this.chestItemStack.func_77973_b();
+		if(b.id == RECOLOR_BUTTON_ID) {
+			IColoredItem item = (IColoredItem) this.chestItemStack.getItem();
 			int c = item.getColor(chestItemStack);
-			Minecraft.func_71410_x().func_147108_a(new GuiRecolorItem(this.chestItemStack, (c == -1 || c == item.getDefaultColor())? item.getDefaultColor(): c, CHEST_ITEMSTACK_INDEX));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiRecolorItem(this.chestItemStack, (c == -1 || c == item.getDefaultColor())? item.getDefaultColor(): c, CHEST_ITEMSTACK_INDEX));
 		}
 	}
     /**
      * Draws the screen and all the components in it.
      */
 	@Override
-    public void func_73863_a(int mouseX, int mouseY, float partialTicks){
-        this.func_146276_q_();
-        super.func_73863_a(mouseX, mouseY, partialTicks);
-        this.func_191948_b(mouseX, mouseY);
+    public void drawScreen(int mouseX, int mouseY, float partialTicks){
+        this.drawDefaultBackground();
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
     }
 	
 	@Override
-	protected void func_146976_a(float partialTicks, int mouseX, int mouseY) {
-		if(this.chestItemStack.func_77973_b() instanceof IColoredItem && !(WSBIM.options.renderBasedOffVanillaTextures() && this.chestItemType.hasAlternativeMinecraftGuiTexture())) {
-			IColoredItem item = (IColoredItem) this.chestItemStack.func_77973_b();
+	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+		if(this.chestItemStack.getItem() instanceof IColoredItem && !(WSBIM.options.renderBasedOffVanillaTextures() && this.chestItemType.hasAlternativeMinecraftGuiTexture())) {
+			IColoredItem item = (IColoredItem) this.chestItemStack.getItem();
 			int color = item.getColor(chestItemStack);
 			if(color != item.getDefaultColor()) {
 				int[] rgb = ColorHelper.convertIntegerToRGB(color);
 				int red = rgb[0];
 				int green = rgb[1];
 				int blue = rgb[2];
-				GlStateManager.func_179131_c((((float)red/255F) * RECOLOR_GUI_FACTOR) + (1F-RECOLOR_GUI_FACTOR), (((float)green/255F) * RECOLOR_GUI_FACTOR) + (1F-RECOLOR_GUI_FACTOR), (((float)blue/255F) * RECOLOR_GUI_FACTOR) + (1F-RECOLOR_GUI_FACTOR), 1.0F);
+				GlStateManager.color((((float)red/255F) * RECOLOR_GUI_FACTOR) + (1F-RECOLOR_GUI_FACTOR), (((float)green/255F) * RECOLOR_GUI_FACTOR) + (1F-RECOLOR_GUI_FACTOR), (((float)blue/255F) * RECOLOR_GUI_FACTOR) + (1F-RECOLOR_GUI_FACTOR), 1.0F);
 			}
 			else {
-				GlStateManager.func_179131_c(1.0F, 1.0F, 1.0F, 1.0F);
+				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			}
 		}
 		else {
-			GlStateManager.func_179131_c(1.0F, 1.0F, 1.0F, 1.0F);
+			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		}
-		int i = (this.field_146294_l - this.field_146999_f) / 2;
-        int j = (this.field_146295_m - this.field_147000_g) / 2;
+		int i = (this.width - this.xSize) / 2;
+        int j = (this.height - this.ySize) / 2;
         if(WSBIM.options.renderBasedOffVanillaTextures() && this.chestItemType.hasAlternativeMinecraftGuiTexture()) {
         	ResourceLocation loc = this.chestItemType.getAlternativeMinecraftGuiTexture();
         	if(this.chestItemType.canRenderWithGeneric54()) {
-        		this.field_146297_k.func_110434_K().func_110577_a(loc);
+        		this.mc.getTextureManager().bindTexture(loc);
         		int inv_start_y = this.chestItemType.getColumnRenderStart();
         		int rows = this.chestItemType.getNumRows();
-        		this.func_73729_b(i, j, 0, 0, this.field_146999_f, inv_start_y + (rows * 18));
-        		this.func_73729_b(i, j + (inv_start_y + (rows * 18)), 0, 125, this.field_146999_f, 97);
+        		this.drawTexturedModalRect(i, j, 0, 0, this.xSize, inv_start_y + (rows * 18));
+        		this.drawTexturedModalRect(i, j + (inv_start_y + (rows * 18)), 0, 125, this.xSize, 97);
         	}
         	else {
-        		this.field_146297_k.func_110434_K().func_110577_a(this.chestItemType.getAlternativeMinecraftGuiTexture());
-        		this.func_73729_b(i, j, 0, 0, this.field_146999_f, this.field_147000_g);
+        		this.mc.getTextureManager().bindTexture(this.chestItemType.getAlternativeMinecraftGuiTexture());
+        		this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
         	}
         }
         else if(WSBIM.options.usingDarkGuiContainerTheme() && this.chestItemType.hasDarkGuiTexture()) {
-        	this.field_146297_k.func_110434_K().func_110577_a(this.chestItemType.getDarkGuiTexture());
-        	this.func_73729_b(i, j, 0, 0, this.field_146999_f, this.field_147000_g);
+        	this.mc.getTextureManager().bindTexture(this.chestItemType.getDarkGuiTexture());
+        	this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
         }
         else {
-        	this.field_146297_k.func_110434_K().func_110577_a(this.chestItemType.getGuiTexture());
-        	this.func_73729_b(i, j, 0, 0, this.field_146999_f, this.field_147000_g);
+        	this.mc.getTextureManager().bindTexture(this.chestItemType.getGuiTexture());
+        	this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
         }
-        GlStateManager.func_179131_c(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     }
 	@Override
-    protected void func_146979_b(int mouseX, int mouseY){
-        String s = this.chestItemStack.func_82833_r();
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
+        String s = this.chestItemStack.getDisplayName();
         int drawColor = WSBIM.options.usingDarkGuiContainerTheme() && !(WSBIM.options.renderBasedOffVanillaTextures() && this.chestItemType.hasAlternativeMinecraftGuiTexture())? ColorHelper.GUI_CONTAINER_TEXT_COLOR_LIGHT : ColorHelper.GUI_CONTAINER_TEXT_COLOR;
-	    if(this.chestItemStack.func_77973_b() instanceof IColoredItem && !(WSBIM.options.renderBasedOffVanillaTextures() && this.chestItemType.hasAlternativeMinecraftGuiTexture())) {
-        	IColoredItem coloreditem = (IColoredItem) this.chestItemStack.func_77973_b();
+	    if(this.chestItemStack.getItem() instanceof IColoredItem && !(WSBIM.options.renderBasedOffVanillaTextures() && this.chestItemType.hasAlternativeMinecraftGuiTexture())) {
+        	IColoredItem coloreditem = (IColoredItem) this.chestItemStack.getItem();
         	int[] string_rgb = ColorHelper.convertIntegerToRGB(drawColor);
         	int itemColor = coloreditem.getColor(chestItemStack);
         	if(itemColor != coloreditem.getDefaultColor() && itemColor != -1) {
@@ -162,9 +143,9 @@ public class GuiChestItem extends GuiContainer{
         		}
         	}
         }
-        this.field_146289_q.func_78276_b(s, this.chestItemType.getRowRenderStart(), this.chestItemType.getColumnRenderStart() - this.field_146289_q.field_78288_b - 2, drawColor);
+        this.fontRenderer.drawString(s, this.chestItemType.getRowRenderStart(), this.chestItemType.getColumnRenderStart() - this.fontRenderer.FONT_HEIGHT - 2, drawColor);
         int plr_inventory_base_height = (this.chestItemType.getColumnRenderStart() - 1) + (this.chestItemType.getNumRows() * 18);
-        this.field_146289_q.func_78276_b(this.player.field_71071_by.func_145748_c_().func_150260_c(), this.chestItemType.getInventoryPlayerRowStart(), plr_inventory_base_height + 3, drawColor);
+        this.fontRenderer.drawString(this.player.inventory.getDisplayName().getUnformattedText(), this.chestItemType.getInventoryPlayerRowStart(), plr_inventory_base_height + 3, drawColor);
     }
 
 }

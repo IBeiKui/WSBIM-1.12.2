@@ -3,13 +3,6 @@ package com.finalkg.wsbim.client.lib.event;
 import com.finalkg.wsbim.WSBIM;
 import com.finalkg.wsbim.common.lib.ColorHelper;
 import com.finalkg.wsbim.common.lib.WorldTimeHelper;
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -23,7 +16,7 @@ public class UpdateUIColorsEvent {
 	@SubscribeEvent
 	public void onRenderTick(RenderTickEvent e){
 		if(e.phase == Phase.END) { 
-			Minecraft mc = Minecraft.func_71410_x();
+			Minecraft mc = Minecraft.getMinecraft();
 			//Do our color control
 			if(WSBIM.options.colorMode.equals(WSBIM.options.colorModes[1])){
 				if(WorldTimeHelper.isDayTimeInRealLife()){
@@ -39,8 +32,8 @@ public class UpdateUIColorsEvent {
 			}
 			if(WSBIM.options.colorMode.equals(WSBIM.options.colorModes[2])){
 				boolean flag = false;
-				if(mc.field_71441_e !=null) {
-					flag = WorldTimeHelper.isDaytime(mc.field_71441_e);
+				if(mc.world !=null) {
+					flag = WorldTimeHelper.isDaytime(mc.world);
 				}
 				else if(WorldTimeHelper.isDayTimeInRealLife()) flag = true;
 				if(flag){

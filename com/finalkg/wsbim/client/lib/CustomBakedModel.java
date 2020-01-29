@@ -1,14 +1,6 @@
 package com.finalkg.wsbim.client.lib;
 
 import java.util.List;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.block.model.ItemOverrideList;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.EnumFacing;
-
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -27,22 +19,22 @@ public abstract class CustomBakedModel implements IBakedModel {
 	}
 
 	@Override
-	public List<BakedQuad> func_188616_a(IBlockState state, EnumFacing side, long rand) {
-		return model.func_188616_a(state, side, rand);
+	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
+		return model.getQuads(state, side, rand);
 	}
 
 	@Override
-	public boolean func_177555_b() {
-		return model.func_177555_b();
+	public boolean isAmbientOcclusion() {
+		return model.isAmbientOcclusion();
 	}
 
 	@Override
-	public boolean func_177556_c() {
-		return model.func_177556_c();
+	public boolean isGui3d() {
+		return model.isGui3d();
 	}
 
 	@Override
-	public boolean func_188618_c() {
+	public boolean isBuiltInRenderer() {
 		render(model);
 		return true;
 	}
@@ -50,18 +42,18 @@ public abstract class CustomBakedModel implements IBakedModel {
 	public abstract void render(IBakedModel model);
 
 	@Override
-	public TextureAtlasSprite func_177554_e() {
-		return model.func_177554_e();
+	public TextureAtlasSprite getParticleTexture() {
+		return model.getParticleTexture();
 	}
 
 	@Override
 	@Deprecated
-	public ItemCameraTransforms func_177552_f() {
-		return model.func_177552_f();
+	public ItemCameraTransforms getItemCameraTransforms() {
+		return model.getItemCameraTransforms();
 	}
 
 	@Override
-	public ItemOverrideList func_188617_f() {
-		return model.func_188617_f();
+	public ItemOverrideList getOverrides() {
+		return model.getOverrides();
 	}
 }

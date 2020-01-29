@@ -3,14 +3,6 @@ package com.finalkg.wsbim.client.lib;
 import com.finalkg.wsbim.WSBIM;
 import com.finalkg.wsbim.client.render.block.RenderMixedMetalChestModel;
 import com.finalkg.wsbim.client.render.block.RenderObsidianChestModel;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-
 
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -31,9 +23,9 @@ public class WSBIMModelBakery {
 
 	@SubscribeEvent
 	public static void onModelBake(ModelBakeEvent event) {
-		IBakedModel obsidianChestModel = event.getModelRegistry().func_82594_a(MODEL_RESOURCE_OBSIDIAN_CHEST);
-		event.getModelRegistry().func_82595_a(MODEL_RESOURCE_OBSIDIAN_CHEST, new RenderObsidianChestModel(obsidianChestModel));
-		IBakedModel mixedMetalChestModel = event.getModelRegistry().func_82594_a(MODEL_RESOURCE_MIXED_METAL_CHEST);
-		event.getModelRegistry().func_82595_a(MODEL_RESOURCE_MIXED_METAL_CHEST, new RenderMixedMetalChestModel(mixedMetalChestModel));
+		IBakedModel obsidianChestModel = event.getModelRegistry().getObject(MODEL_RESOURCE_OBSIDIAN_CHEST);
+		event.getModelRegistry().putObject(MODEL_RESOURCE_OBSIDIAN_CHEST, new RenderObsidianChestModel(obsidianChestModel));
+		IBakedModel mixedMetalChestModel = event.getModelRegistry().getObject(MODEL_RESOURCE_MIXED_METAL_CHEST);
+		event.getModelRegistry().putObject(MODEL_RESOURCE_MIXED_METAL_CHEST, new RenderMixedMetalChestModel(mixedMetalChestModel));
 	}
 }

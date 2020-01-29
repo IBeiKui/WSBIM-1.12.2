@@ -3,11 +3,6 @@ package com.finalkg.wsbim.client.lib.option;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import com.finalkg.wsbim.WSBIM;
-import com.finalkg.wsbim.WSBIMOptions;
-import com.finalkg.wsbim.WSBIMOptions.OptionType;
-import net.minecraft.client.gui.GuiScreen;
-
 
 import com.finalkg.wsbim.WSBIM;
 import com.finalkg.wsbim.WSBIMOptions;

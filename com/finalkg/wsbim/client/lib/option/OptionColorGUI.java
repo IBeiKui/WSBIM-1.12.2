@@ -1,13 +1,6 @@
 package com.finalkg.wsbim.client.lib.option;
 
 import java.lang.reflect.Field;
-import com.finalkg.wsbim.WSBIM;
-import com.finalkg.wsbim.WSBIMOptions;
-import com.finalkg.wsbim.WSBIMOptions.OptionType;
-import com.finalkg.wsbim.client.gui.screen.options.GuiModifyColor;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-
 
 import com.finalkg.wsbim.WSBIM;
 import com.finalkg.wsbim.WSBIMOptions;
@@ -46,7 +39,7 @@ public class OptionColorGUI extends Option {
 	@Override
 	public GuiScreen getGuiToOpen() {
 		//TODO Color modifier GUI
-		return new GuiModifyColor(this, Minecraft.func_71410_x().field_71462_r);
+		return new GuiModifyColor(this, Minecraft.getMinecraft().currentScreen);
 	}
 
 	public String getColor(){

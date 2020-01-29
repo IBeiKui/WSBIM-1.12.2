@@ -1,14 +1,6 @@
 package com.finalkg.wsbim.client.render.tileentity;
 import com.finalkg.wsbim.WSBIM;
 import com.finalkg.wsbim.common.tile.TileEntityObsidianChest;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelChest;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelChest;
@@ -24,35 +16,35 @@ public class TileEntityObsidianChestRenderer extends TileEntitySpecialRenderer<T
     private static final ResourceLocation OBSIDIAN_CHEST_TEXTURE = new ResourceLocation(WSBIM.MODID, "textures/models/chest/obsidian_chest.png");
     private final ModelChest modelChest = new ModelChest();
 
-    public void func_192841_a(TileEntityObsidianChest te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+    public void render(TileEntityObsidianChest te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
     {
     	//int i is set to 2 for default inventory rendering
         int i = 2;
-        if (te.func_145830_o())
+        if (te.hasWorld())
         {
-            i = te.func_145832_p();
+            i = te.getBlockMetadata();
         }
 
         if (destroyStage >= 0)
         {
-            Minecraft.func_71410_x().field_71446_o.func_110577_a(field_178460_a[destroyStage]);
-            GlStateManager.func_179128_n(5890);
-            GlStateManager.func_179094_E();
-            GlStateManager.func_179152_a(4.0F, 4.0F, 1.0F);
-            GlStateManager.func_179109_b(0.0625F, 0.0625F, 0.0625F);
-            GlStateManager.func_179128_n(5888);
+            Minecraft.getMinecraft().renderEngine.bindTexture(DESTROY_STAGES[destroyStage]);
+            GlStateManager.matrixMode(5890);
+            GlStateManager.pushMatrix();
+            GlStateManager.scale(4.0F, 4.0F, 1.0F);
+            GlStateManager.translate(0.0625F, 0.0625F, 0.0625F);
+            GlStateManager.matrixMode(5888);
         }
         else
         {
-        	Minecraft.func_71410_x().field_71446_o.func_110577_a(OBSIDIAN_CHEST_TEXTURE);
+        	Minecraft.getMinecraft().renderEngine.bindTexture(OBSIDIAN_CHEST_TEXTURE);
         }
 
-        GlStateManager.func_179094_E();
-        GlStateManager.func_179091_B();
-        GlStateManager.func_179131_c(1.0F, 1.0F, 1.0F, alpha);
-        GlStateManager.func_179109_b((float)x, (float)y + 1.0F, (float)z + 1.0F);
-        GlStateManager.func_179152_a(1.0F, -1.0F, -1.0F);
-        GlStateManager.func_179109_b(0.5F, 0.5F, 0.5F);
+        GlStateManager.pushMatrix();
+        GlStateManager.enableRescaleNormal();
+        GlStateManager.color(1.0F, 1.0F, 1.0F, alpha);
+        GlStateManager.translate((float)x, (float)y + 1.0F, (float)z + 1.0F);
+        GlStateManager.scale(1.0F, -1.0F, -1.0F);
+        GlStateManager.translate(0.5F, 0.5F, 0.5F);
         int j = 0;
 
         if (i == 2)
@@ -75,22 +67,22 @@ public class TileEntityObsidianChestRenderer extends TileEntitySpecialRenderer<T
             j = -90;
         }
 
-        GlStateManager.func_179114_b((float)j, 0.0F, 1.0F, 0.0F);
-        GlStateManager.func_179109_b(-0.5F, -0.5F, -0.5F);
+        GlStateManager.rotate((float)j, 0.0F, 1.0F, 0.0F);
+        GlStateManager.translate(-0.5F, -0.5F, -0.5F);
         float f = te.prevLidAngle + (te.lidAngle - te.prevLidAngle) * partialTicks;
         f = 1.0F - f;
         f = 1.0F - f * f * f;
-        this.modelChest.field_78234_a.field_78795_f = -(f * ((float)Math.PI / 4F));
-        this.modelChest.func_78231_a();
-        GlStateManager.func_179101_C();
-        GlStateManager.func_179121_F();
-        GlStateManager.func_179131_c(1.0F, 1.0F, 1.0F, 1.0F);
+        this.modelChest.chestLid.rotateAngleX = -(f * ((float)Math.PI / 4F));
+        this.modelChest.renderAll();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.popMatrix();
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
         if (destroyStage >= 0)
         {
-            GlStateManager.func_179128_n(5890);
-            GlStateManager.func_179121_F();
-            GlStateManager.func_179128_n(5888);
+            GlStateManager.matrixMode(5890);
+            GlStateManager.popMatrix();
+            GlStateManager.matrixMode(5888);
         }
     }
 }

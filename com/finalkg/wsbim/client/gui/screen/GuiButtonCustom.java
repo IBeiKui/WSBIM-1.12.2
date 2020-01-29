@@ -1,14 +1,6 @@
 package com.finalkg.wsbim.client.gui.screen;
 
 import java.awt.Color;
-import com.finalkg.wsbim.WSBIM;
-import com.finalkg.wsbim.client.lib.GuiHelper;
-import com.finalkg.wsbim.common.lib.ColorHelper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import org.lwjgl.opengl.GL11;
-
 
 import org.lwjgl.opengl.GL11;
 
@@ -30,11 +22,11 @@ public class GuiButtonCustom extends GuiButton{
 	/**
      * Draws this button to the screen.
      */
-    public void func_191745_a(Minecraft mc, int mouseX, int mouseY, float renderTick){
-        if (this.field_146125_m){
-            FontRenderer fontrenderer = mc.field_71466_p;
-            this.field_146123_n = mouseX >= this.field_146128_h && mouseY >= this.field_146129_i && mouseX < this.field_146128_h + this.field_146120_f && mouseY < this.field_146129_i + this.field_146121_g;
-            int k = this.func_146114_a(this.field_146123_n);
+    public void drawButton(Minecraft mc, int mouseX, int mouseY, float renderTick){
+        if (this.visible){
+            FontRenderer fontrenderer = mc.fontRenderer;
+            this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+            int k = this.getHoverState(this.hovered);
             GL11.glEnable(GL11.GL_BLEND);
             String hex3 = WSBIM.options.textColor;
         	int textred = 0;
@@ -71,22 +63,22 @@ public class GuiButtonCustom extends GuiButton{
             if (packedFGColour != 0){
                 l = packedFGColour;
             }
-            else if (!this.field_146124_l){
+            else if (!this.enabled){
                 l = 10526880;
                 alpha = 0.2F;
             }
-            else if (this.field_146123_n){
+            else if (this.hovered){
                 l = 16777120;
                 alpha = WSBIM.options.defaultForegroundOpacity;
             }
             int j = ColorHelper.convertRGBToInteger(textred, textgreen, textblue);
-            if (!this.field_146124_l)
+            if (!this.enabled)
             {
                 j = ColorHelper.BLACK;
             }
-            GuiHelper.drawSpecificRect(field_146128_h, field_146129_i, field_146128_h+field_146120_f, field_146129_i+field_146121_g, this.field_146123_n ? (foregroundred / 255F) : (backgroundred / 255F), this.field_146123_n ? (foregroundgreen / 255F) : (backgroundgreen / 255F), this.field_146123_n ? (foregroundblue / 255F) : (backgroundblue / 255F), alpha);
-            this.func_146119_b(mc, mouseX, mouseY);
-            Minecraft.func_71410_x().field_71466_p.func_175063_a(this.field_146126_j, this.field_146128_h + field_146120_f/2 - (Minecraft.func_71410_x().field_71466_p.func_78256_a(this.field_146126_j) / 2), this.field_146129_i + (this.field_146121_g - 8) / 2, j);
+            GuiHelper.drawSpecificRect(x, y, x+width, y+height, this.hovered ? (foregroundred / 255F) : (backgroundred / 255F), this.hovered ? (foregroundgreen / 255F) : (backgroundgreen / 255F), this.hovered ? (foregroundblue / 255F) : (backgroundblue / 255F), alpha);
+            this.mouseDragged(mc, mouseX, mouseY);
+            Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(this.displayString, this.x + width/2 - (Minecraft.getMinecraft().fontRenderer.getStringWidth(this.displayString) / 2), this.y + (this.height - 8) / 2, j);
         }
     }
 }
