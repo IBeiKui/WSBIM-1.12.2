@@ -15,12 +15,12 @@ public class ItemStackUtil {
 	
 	public static void loadAllItems(NBTTagCompound tag, ItemStack[] stacks)
     {
-        NBTTagList nbttaglist = tag.func_150295_c("Items", 10);
+        NBTTagList nbttaglist = tag.getTagList("Items", 10);
 
-        for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+        for (int i = 0; i < nbttaglist.tagCount(); ++i)
         {
-            NBTTagCompound nbttagcompound = nbttaglist.func_150305_b(i);
-            int j = nbttagcompound.func_74771_c("Slot") & 255;
+            NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
+            int j = nbttagcompound.getByte("Slot") & 255;
 
             if (j >= 0 && j < stacks.length)
             {
@@ -37,18 +37,18 @@ public class ItemStackUtil {
         {
             ItemStack itemstack = stacks[i];
 
-            if (!itemstack.func_190926_b())
+            if (!itemstack.isEmpty())
             {
                 NBTTagCompound nbttagcompound = new NBTTagCompound();
-                nbttagcompound.func_74774_a("Slot", (byte)i);
-                itemstack.func_77955_b(nbttagcompound);
-                nbttaglist.func_74742_a(nbttagcompound);
+                nbttagcompound.setByte("Slot", (byte)i);
+                itemstack.writeToNBT(nbttagcompound);
+                nbttaglist.appendTag(nbttagcompound);
             }
         }
 
-        if (!nbttaglist.func_82582_d() || saveEmpty)
+        if (!nbttaglist.hasNoTags() || saveEmpty)
         {
-            tag.func_74782_a("Items", nbttaglist);
+            tag.setTag("Items", nbttaglist);
         }
 
         return tag;

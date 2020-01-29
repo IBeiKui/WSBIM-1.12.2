@@ -3,8 +3,6 @@ package com.finalkg.wsbim.common.lib;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import net.minecraft.world.World;
-
 
 import net.minecraft.world.World;
 
@@ -28,7 +26,7 @@ public class WorldTimeHelper{
 		if(world == null) return "00:00";
 		String hour;
 		String minute;
-		long tickTime = world.func_72820_D();
+		long tickTime = world.getWorldTime();
 		long hours = tickTime / 1000 + 6;
 		hours %=24;
 		if(hours == 24) hours = 0;
@@ -47,7 +45,7 @@ public class WorldTimeHelper{
 	 */
 	public static long getCurrentHourForWorld(World world) {
 		if(world == null) return 0;
-		long tickTime = world.func_72820_D();
+		long tickTime = world.getWorldTime();
 		long hours = tickTime / 1000 + 6;
 		hours %=24;
 		if(hours == 24) hours = 0;

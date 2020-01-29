@@ -6,16 +6,6 @@ import com.finalkg.wsbim.common.net.server.ChangeItemStackColorPacket;
 import com.finalkg.wsbim.common.net.server.ChangeItemStackNamePacket;
 import com.finalkg.wsbim.common.net.server.CloseAllIInventoriesOnPlayerPacket;
 import com.finalkg.wsbim.common.net.server.OpenModGui;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -106,9 +96,9 @@ range));
  * Sends a message to everyone within a certain range of the player provided.
  */
  public static final void sendToAllAround(IMessage message, EntityPlayer player, double range) {
- PacketDispatcher.sendToAllAround(message, player.field_70170_p.field_73011_w.getDimension(), player.field_70165_t, 
+ PacketDispatcher.sendToAllAround(message, player.world.provider.getDimension(), player.posX, 
 
-player.field_70163_u, player.field_70161_v, range);
+player.posY, player.posZ, range);
  }
 
  /**

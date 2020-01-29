@@ -2,17 +2,6 @@ package com.finalkg.wsbim.common.net.server;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.finalkg.wsbim.WSBIM;
-import com.finalkg.wsbim.common.net.AbstractMessage.AbstractServerMessage;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-
 
 import com.finalkg.wsbim.WSBIM;
 import com.finalkg.wsbim.common.net.AbstractMessage.AbstractServerMessage;
@@ -75,24 +64,24 @@ public class CloseAllIInventoriesOnPlayerPacket extends AbstractServerMessage<Cl
 			//player.closeScreen();
 			//Bug fix for chests. Tells all of the IIventories inside a container that they should open.
 			
-			Object[] slots = player.field_71070_bA.field_75151_b.toArray();
+			Object[] slots = player.openContainer.inventorySlots.toArray();
 			List<IInventory> inventories = new ArrayList<IInventory>();
 			for(int i = 0; i < slots.length; i++){
 				Slot slot = (Slot) slots[i];
 				if(slot !=null){
-					if(!inventories.contains(slot.field_75224_c)){
-						inventories.add(slot.field_75224_c);
+					if(!inventories.contains(slot.inventory)){
+						inventories.add(slot.inventory);
 					}
 				}
 			}
 			for(int k = 0; k < inventories.size(); k++){
 				IInventory inv = inventories.get(k);
 				if(inv !=null){
-					inv.func_174886_c(player);
+					inv.closeInventory(player);
 				}
 			}
-			player.field_71070_bA.func_75134_a(player);
-			player.func_71053_j();
+			player.openContainer.onContainerClosed(player);
+			player.closeScreen();
 		//}
 			//player.openGui(WSBIM.instance, this.id, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
 	}
@@ -111,30 +100,30 @@ public class CloseAllIInventoriesOnPlayerPacket extends AbstractServerMessage<Cl
 			// the proxy method everywhere keeps you safe from mundane mistakes
 			EntityPlayer player = WSBIM.proxy.getPlayerEntity(ctx);
 			// because we sent the gui's id with the packet, we can handle all cases with one line:
-			EntityPlayer correctPlayer = ctx.getServerHandler().field_147369_b.field_70170_p.func_72924_a(player.getDisplayNameString());
+			EntityPlayer correctPlayer = ctx.getServerHandler().player.world.getPlayerEntityByName(player.getDisplayNameString());
 			//ServerSideContainerTab.containerToOpen = ssct_2.containerToOpen;
 			//if(ctx.side == Side.CLIENT) ((GuiContainerTab)tab).ssct = new ServerSideContainerTab();
 			//correctPlayer.closeScreen();
 			//Bugfix for renaming bags or backpacks
-			Object[] slots = player.field_71070_bA.field_75151_b.toArray();
+			Object[] slots = player.openContainer.inventorySlots.toArray();
 			List<IInventory> inventories = new ArrayList<IInventory>();
 			for(int i = 0; i < slots.length; i++){
 				Slot slot = (Slot) slots[i];
 				if(slot !=null){
-					if(!inventories.contains(slot.field_75224_c)){
-						inventories.add(slot.field_75224_c);
+					if(!inventories.contains(slot.inventory)){
+						inventories.add(slot.inventory);
 					}
 				}
 			}
 			for(int k = 0; k < inventories.size(); k++){
 				IInventory inv = inventories.get(k);
 				if(inv !=null){
-					inv.func_174886_c(player);
+					inv.closeInventory(player);
 				}
 			}
-			player.field_71070_bA.func_75142_b();
-			player.field_71070_bA.func_75134_a(player);
-			player.func_71053_j();
+			player.openContainer.detectAndSendChanges();
+			player.openContainer.onContainerClosed(player);
+			player.closeScreen();
 			return null;
 		}
 	}

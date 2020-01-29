@@ -2,11 +2,6 @@ package com.finalkg.wsbim.common.lib;
 
 import com.finalkg.wsbim.common.net.PacketDispatcher;
 import com.finalkg.wsbim.common.net.server.OpenModGui;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
@@ -42,19 +37,19 @@ public class ContainerUtil {
 	 */
 	public static int getItemStackIndexInPlayerInventory(InventoryPlayer playerInv, ItemStack stack) {
 		int index = -1;
-		for(int i = 0; i < playerInv.func_70302_i_(); i++) {
-			ItemStack check = playerInv.func_70301_a(i);
-			if(!check.func_190926_b()) {
-				if(check.equals(stack)) index = playerInv.func_184429_b(check);
+		for(int i = 0; i < playerInv.getSizeInventory(); i++) {
+			ItemStack check = playerInv.getStackInSlot(i);
+			if(!check.isEmpty()) {
+				if(check.equals(stack)) index = playerInv.getSlotFor(check);
 			}
 		}
-		for(int i = 0; i < playerInv.field_70460_b.size(); i++) {
-			ItemStack check = playerInv.func_70440_f(i);
-			if(!check.func_190926_b()) if(check.equals(stack)) index = i + playerInv.field_70462_a.size();
+		for(int i = 0; i < playerInv.armorInventory.size(); i++) {
+			ItemStack check = playerInv.armorItemInSlot(i);
+			if(!check.isEmpty()) if(check.equals(stack)) index = i + playerInv.mainInventory.size();
 		}
-		for(int i = 0; i < playerInv.field_184439_c.size(); i++) {
-			ItemStack check = playerInv.field_184439_c.get(i);
-			if(!check.func_190926_b()) if(check.equals(stack)) index = i + playerInv.field_70462_a.size() + playerInv.field_70460_b.size();
+		for(int i = 0; i < playerInv.offHandInventory.size(); i++) {
+			ItemStack check = playerInv.offHandInventory.get(i);
+			if(!check.isEmpty()) if(check.equals(stack)) index = i + playerInv.mainInventory.size() + playerInv.armorInventory.size();
 		}
 		return index;
 	}
@@ -65,8 +60,8 @@ public class ContainerUtil {
 	 * @return
 	 */
 	public static boolean hasItemInInventory(IInventory inventory, Item itemToCheck) {
-		for(int i = 0; i < inventory.func_70302_i_(); i++) {
-			if(!inventory.func_70301_a(i).func_190926_b()) if(inventory.func_70301_a(i).func_77973_b().equals(itemToCheck)) return true;
+		for(int i = 0; i < inventory.getSizeInventory(); i++) {
+			if(!inventory.getStackInSlot(i).isEmpty()) if(inventory.getStackInSlot(i).getItem().equals(itemToCheck)) return true;
 		}
 		return false;
 	}
@@ -77,17 +72,17 @@ public class ContainerUtil {
 	 * @return Item found.
 	 */
 	public static boolean hasItemInPlayerInventory(InventoryPlayer playerInv, Item check) {
-		for(int i = 0; i < playerInv.field_70462_a.size(); i++) {
-			ItemStack checkstack = playerInv.field_70462_a.get(i);
-			if(!checkstack.func_190926_b()) if(checkstack.func_77973_b().equals(check)) return true;
+		for(int i = 0; i < playerInv.mainInventory.size(); i++) {
+			ItemStack checkstack = playerInv.mainInventory.get(i);
+			if(!checkstack.isEmpty()) if(checkstack.getItem().equals(check)) return true;
 		}
-		for(int i = 0; i < playerInv.field_70460_b.size(); i++) {
-			ItemStack checkstack = playerInv.field_70460_b.get(i);
-			if(!checkstack.func_190926_b()) if(checkstack.func_77973_b().equals(check)) return true;
+		for(int i = 0; i < playerInv.armorInventory.size(); i++) {
+			ItemStack checkstack = playerInv.armorInventory.get(i);
+			if(!checkstack.isEmpty()) if(checkstack.getItem().equals(check)) return true;
 		}
-		for(int i = 0; i < playerInv.field_184439_c.size(); i++) {
-			ItemStack checkstack = playerInv.field_184439_c.get(i);
-			if(!checkstack.func_190926_b()) if(checkstack.func_77973_b().equals(check)) return true;
+		for(int i = 0; i < playerInv.offHandInventory.size(); i++) {
+			ItemStack checkstack = playerInv.offHandInventory.get(i);
+			if(!checkstack.isEmpty()) if(checkstack.getItem().equals(check)) return true;
 		}
 		return false;
 	}
@@ -98,8 +93,8 @@ public class ContainerUtil {
 	 */
 	public static boolean isPlayerWearingArmor(InventoryPlayer playerInv) {
 		boolean flag = false;
-		for(int i = 0; i < playerInv.field_70460_b.size(); i++) {
-			if(!playerInv.field_70460_b.get(i).func_190926_b()) flag = true;
+		for(int i = 0; i < playerInv.armorInventory.size(); i++) {
+			if(!playerInv.armorInventory.get(i).isEmpty()) flag = true;
 		}
 		return flag;
 	}

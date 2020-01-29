@@ -14,7 +14,7 @@ public class SlotNoTake extends Slot {
     /**
      * Return whether this slot's stack can be taken from this slot.
      */
-    public boolean func_82869_a(EntityPlayer playerIn)
+    public boolean canTakeStack(EntityPlayer playerIn)
     {
         return false;
     }

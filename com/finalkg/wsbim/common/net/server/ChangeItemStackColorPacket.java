@@ -1,17 +1,6 @@
 package com.finalkg.wsbim.common.net.server;
 
 import java.io.IOException;
-import com.finalkg.wsbim.WSBIM;
-import com.finalkg.wsbim.common.lib.ColorHelper;
-import com.finalkg.wsbim.common.net.AbstractMessage.AbstractServerMessage;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-
 
 import com.finalkg.wsbim.WSBIM;
 import com.finalkg.wsbim.common.lib.ColorHelper;
@@ -54,7 +43,7 @@ public class ChangeItemStackColorPacket extends AbstractServerMessage<ChangeItem
 	protected void read(PacketBuffer buffer) throws IOException {
 		// basic Input/Output operations, very much like DataInputStream
 		itemIndex = buffer.readInt();
-		newColor = buffer.func_150789_c(10000);
+		newColor = buffer.readString(10000);
 		this.removeColor = buffer.readBoolean();
 	}
 
@@ -62,13 +51,13 @@ public class ChangeItemStackColorPacket extends AbstractServerMessage<ChangeItem
 	protected void write(PacketBuffer buffer) throws IOException {
 		// basic Input/Output operations, very much like DataOutputStream
 		buffer.writeInt(itemIndex);
-		buffer.func_180714_a(newColor);
+		buffer.writeString(newColor);
 		buffer.writeBoolean(removeColor);
 	}
 
 	@Override
 	public void process(EntityPlayer player, Side side) {
-		ItemStack itemStack = player.field_71071_by.func_70301_a(itemIndex);
+		ItemStack itemStack = player.inventory.getStackInSlot(itemIndex);
 		if(this.removeColor)ColorHelper.removeColor(itemStack);
 		else {
 			int color = Integer.parseInt(newColor);
@@ -86,7 +75,7 @@ public class ChangeItemStackColorPacket extends AbstractServerMessage<ChangeItem
 		@Override
 		public IMessage onMessage(ChangeItemStackColorPacket message, MessageContext ctx) {
 			EntityPlayer player = WSBIM.proxy.getPlayerEntity(ctx);
-			ItemStack itemStack = player.field_71071_by.func_70301_a(message.itemIndex);
+			ItemStack itemStack = player.inventory.getStackInSlot(message.itemIndex);
 			if(message.removeColor)ColorHelper.removeColor(itemStack);
 			else {
 				int color = Integer.parseInt(message.newColor);

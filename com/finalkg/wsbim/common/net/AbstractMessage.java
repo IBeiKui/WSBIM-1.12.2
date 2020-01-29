@@ -1,16 +1,6 @@
 package com.finalkg.wsbim.common.net;
 
 import java.io.IOException;
-import com.finalkg.wsbim.WSBIM;
-import com.google.common.base.Throwables;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-
 
 import com.finalkg.wsbim.WSBIM;
 import com.google.common.base.Throwables;

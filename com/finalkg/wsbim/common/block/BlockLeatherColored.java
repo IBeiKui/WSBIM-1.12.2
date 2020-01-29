@@ -7,8 +7,8 @@ import net.minecraft.block.material.Material;
 public class BlockLeatherColored extends BlockColored {
 
 	public BlockLeatherColored() {
-		super(Material.field_151580_n);
-		this.func_149672_a(SoundType.field_185854_g);
+		super(Material.CLOTH);
+		this.setSoundType(SoundType.CLOTH);
 	}
     
 }

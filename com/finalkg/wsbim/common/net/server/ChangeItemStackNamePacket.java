@@ -1,17 +1,6 @@
 package com.finalkg.wsbim.common.net.server;
 
 import java.io.IOException;
-import com.finalkg.wsbim.WSBIM;
-import com.finalkg.wsbim.common.net.AbstractMessage.AbstractServerMessage;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-
 
 import com.finalkg.wsbim.WSBIM;
 import com.finalkg.wsbim.common.lib.ContainerUtil;
@@ -53,7 +42,7 @@ public class ChangeItemStackNamePacket extends AbstractServerMessage<ChangeItemS
 	protected void read(PacketBuffer buffer) throws IOException {
 		// basic Input/Output operations, very much like DataInputStream
 		itemIndex = buffer.readInt();
-		textToUse = buffer.func_150789_c(10000);
+		textToUse = buffer.readString(10000);
 		this.resetName = buffer.readBoolean();
 	}
 
@@ -61,26 +50,26 @@ public class ChangeItemStackNamePacket extends AbstractServerMessage<ChangeItemS
 	protected void write(PacketBuffer buffer) throws IOException {
 		// basic Input/Output operations, very much like DataOutputStream
 		buffer.writeInt(itemIndex);
-		buffer.func_180714_a(textToUse);
+		buffer.writeString(textToUse);
 		buffer.writeBoolean(resetName);
 	}
 
 	@Override
 	public void process(EntityPlayer player, Side side) {
 
-		ItemStack itemStack = player.field_71071_by.func_70301_a(itemIndex);
+		ItemStack itemStack = player.inventory.getStackInSlot(itemIndex);
 		if(itemStack !=null){
-			if(!itemStack.func_77942_o()){
-				itemStack.func_77982_d(new NBTTagCompound());
+			if(!itemStack.hasTagCompound()){
+				itemStack.setTagCompound(new NBTTagCompound());
 			}
-			if(itemStack.func_77978_p().func_74764_b("display")){
-				if(itemStack.func_77978_p().func_74775_l("display").func_74764_b("Name")) itemStack.func_77978_p().func_74775_l("display").func_82580_o("Name");
+			if(itemStack.getTagCompound().hasKey("display")){
+				if(itemStack.getTagCompound().getCompoundTag("display").hasKey("Name")) itemStack.getTagCompound().getCompoundTag("display").removeTag("Name");
 			}
-			if(itemStack.func_77978_p().func_74764_b("RepairCost")){
-				itemStack.func_77978_p().func_82580_o("RepairCost");
+			if(itemStack.getTagCompound().hasKey("RepairCost")){
+				itemStack.getTagCompound().removeTag("RepairCost");
 			}
 
-			if(!this.resetName) itemStack.func_151001_c(this.textToUse);
+			if(!this.resetName) itemStack.setStackDisplayName(this.textToUse);
 		}
 			
 		//}
@@ -100,24 +89,24 @@ public class ChangeItemStackNamePacket extends AbstractServerMessage<ChangeItemS
 			// the proxy method everywhere keeps you safe from mundane mistakes
 			EntityPlayer player = WSBIM.proxy.getPlayerEntity(ctx);
 			// because we sent the gui's id with the packet, we can handle all cases with one line:
-			EntityPlayer correctPlayer = ctx.getServerHandler().field_147369_b.field_70170_p.func_72924_a(player.getDisplayNameString());
+			EntityPlayer correctPlayer = ctx.getServerHandler().player.world.getPlayerEntityByName(player.getDisplayNameString());
 			//ServerSideContainerTab.containerToOpen = ssct_2.containerToOpen;
 			//if(ctx.side == Side.CLIENT) ((GuiContainerTab)tab).ssct = new ServerSideContainerTab();
 			//correctPlayer.closeScreen();
 			//Bugfix for renaming bags or backpacks
-			ItemStack itemStack = player.field_71071_by.func_70301_a(message.itemIndex);
+			ItemStack itemStack = player.inventory.getStackInSlot(message.itemIndex);
 			if(itemStack !=null){
-				if(!itemStack.func_77942_o()){
-					itemStack.func_77982_d(new NBTTagCompound());
+				if(!itemStack.hasTagCompound()){
+					itemStack.setTagCompound(new NBTTagCompound());
 				}
-				if(itemStack.func_77978_p().func_74764_b("display")){
-					if(itemStack.func_77978_p().func_74775_l("display").func_74764_b("Name")) itemStack.func_77978_p().func_74775_l("display").func_82580_o("Name");
+				if(itemStack.getTagCompound().hasKey("display")){
+					if(itemStack.getTagCompound().getCompoundTag("display").hasKey("Name")) itemStack.getTagCompound().getCompoundTag("display").removeTag("Name");
 				}
-				if(itemStack.func_77978_p().func_74764_b("RepairCost")){
-					itemStack.func_77978_p().func_82580_o("RepairCost");
+				if(itemStack.getTagCompound().hasKey("RepairCost")){
+					itemStack.getTagCompound().removeTag("RepairCost");
 				}
 
-				if(!message.resetName) itemStack.func_151001_c(message.textToUse);
+				if(!message.resetName) itemStack.setStackDisplayName(message.textToUse);
 			}
 			return null;
 		}
