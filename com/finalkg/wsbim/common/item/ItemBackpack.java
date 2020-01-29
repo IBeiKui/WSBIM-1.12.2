@@ -53,15 +53,17 @@ public class ItemBackpack extends ItemArmor implements IChestItem, IColoredItem 
     /**
      * Return whether the specified armor ItemStack has a color.
      */
-    public boolean hasColor(ItemStack stack){
+    public boolean hasItemColor(ItemStack stack){
     	NBTTagCompound nbttagcompound = stack.getTagCompound();
     	return nbttagcompound != null && nbttagcompound.hasKey("display", 10) ? nbttagcompound.getCompoundTag("display").hasKey("color", 3) : false;
     }
+    
+    public boolean hasColor(ItemStack stack){return this.hasItemColor(stack);}
 	
     /**
      * Return the color for the specified armor ItemStack.
      */
-    public int getColor(ItemStack stack){
+    public int getItemColor(ItemStack stack){
     	NBTTagCompound nbttagcompound = stack.getTagCompound();
         if(nbttagcompound != null){
         	NBTTagCompound nbttagcompound1 = nbttagcompound.getCompoundTag("display");
@@ -71,11 +73,12 @@ public class ItemBackpack extends ItemArmor implements IChestItem, IColoredItem 
         }
         return /**10511680*/ this.defaultColor;
     }
+    public int getColor(ItemStack stack) {return this.getItemColor(stack);}
     
     /**
      * Remove the color from the specified armor ItemStack.
      */
-    public void removeColor(ItemStack stack){
+    public void removeItemColor(ItemStack stack){
     	NBTTagCompound nbttagcompound = stack.getTagCompound();
         if(nbttagcompound != null){
         	NBTTagCompound nbttagcompound1 = nbttagcompound.getCompoundTag("display");
@@ -84,11 +87,11 @@ public class ItemBackpack extends ItemArmor implements IChestItem, IColoredItem 
             }
         }
     }
-
+    public void removeColor(ItemStack stack) {this.removeItemColor(stack);}
     /**
      * Sets the color of the specified armor ItemStack
      */
-    public void setColor(ItemStack stack, int color){
+    public void setItemColor(ItemStack stack, int color){
     	NBTTagCompound nbttagcompound = stack.getTagCompound();
         if(nbttagcompound == null){
         	nbttagcompound = new NBTTagCompound();
@@ -101,6 +104,7 @@ public class ItemBackpack extends ItemArmor implements IChestItem, IColoredItem 
         }
         nbttagcompound1.setInteger("color", color);
     }
+    public void setColor(ItemStack stack, int color) {this.setItemColor(stack, color);}
     
     public boolean hasOverlay(ItemStack stack){
         return true;
