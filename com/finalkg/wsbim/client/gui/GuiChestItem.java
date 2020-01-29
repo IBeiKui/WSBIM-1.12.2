@@ -66,7 +66,7 @@ public class GuiChestItem extends GuiContainer{
 		}
 		if(b.id == RECOLOR_BUTTON_ID) {
 			IColoredItem item = (IColoredItem) this.chestItemStack.getItem();
-			int c = item.getColor(chestItemStack);
+			int c = item.getItemColor(chestItemStack);
 			Minecraft.getMinecraft().displayGuiScreen(new GuiRecolorItem(this.chestItemStack, (c == -1 || c == item.getDefaultColor())? item.getDefaultColor(): c, CHEST_ITEMSTACK_INDEX));
 		}
 	}
@@ -84,7 +84,7 @@ public class GuiChestItem extends GuiContainer{
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		if(this.chestItemStack.getItem() instanceof IColoredItem && !(WSBIM.options.renderBasedOffVanillaTextures() && this.chestItemType.hasAlternativeMinecraftGuiTexture())) {
 			IColoredItem item = (IColoredItem) this.chestItemStack.getItem();
-			int color = item.getColor(chestItemStack);
+			int color = item.getItemColor(chestItemStack);
 			if(color != item.getDefaultColor()) {
 				int[] rgb = ColorHelper.convertIntegerToRGB(color);
 				int red = rgb[0];
@@ -132,7 +132,7 @@ public class GuiChestItem extends GuiContainer{
 	    if(this.chestItemStack.getItem() instanceof IColoredItem && !(WSBIM.options.renderBasedOffVanillaTextures() && this.chestItemType.hasAlternativeMinecraftGuiTexture())) {
         	IColoredItem coloreditem = (IColoredItem) this.chestItemStack.getItem();
         	int[] string_rgb = ColorHelper.convertIntegerToRGB(drawColor);
-        	int itemColor = coloreditem.getColor(chestItemStack);
+        	int itemColor = coloreditem.getItemColor(chestItemStack);
         	if(itemColor != coloreditem.getDefaultColor() && itemColor != -1) {
         		int[] color_rgb = ColorHelper.convertIntegerToRGB(itemColor);
         		float r = (float)color_rgb[0]/255F;
