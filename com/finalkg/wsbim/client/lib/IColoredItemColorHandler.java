@@ -12,7 +12,7 @@ public class IColoredItemColorHandler implements IItemColor {
 		if(stack !=null || stack != ItemStack.EMPTY) {
 			if(stack.getItem() instanceof IColoredItem) {
 				IColoredItem backpack = (IColoredItem)stack.getItem();
-				return backpack.getColor(stack);
+				return backpack.getItemColor(stack);
 			}
 		}
 		return 16777215;
